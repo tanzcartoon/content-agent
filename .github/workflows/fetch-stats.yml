@@ -29,6 +29,6 @@ jobs:
         run: |
           git config user.name "content-agent-bot"
           git config user.email "actions@github.com"
-          git add dashboard/data.json
+          git add docs/data.json
           git diff --staged --quiet || git commit -m "Update stats data"
           git push
