@@ -53,8 +53,8 @@ def main():
             results["channels"][key] = stats
             print(f"{key}: {stats}")
 
-    os.makedirs("dashboard", exist_ok=True)
-    with open("dashboard/data.json", "w", encoding="utf-8") as f:
+    os.makedirs("docs", exist_ok=True)
+    with open("docs/data.json", "w", encoding="utf-8") as f:
         json.dump(results, f, ensure_ascii=False, indent=2)
 
     print("Saved to dashboard/data.json")
