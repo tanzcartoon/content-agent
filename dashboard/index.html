@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>Content Agent Dashboard - Tanz Cartoon</title>
+<style>
+  body {
+    font-family: -apple-system, "Segoe UI", Tahoma, sans-serif;
+    background: #0f1117;
+    color: #e5e7eb;
+    margin: 0;
+    padding: 24px;
+  }
+  h1 { font-size: 22px; font-weight: 600; margin-bottom: 4px; }
+  .subtitle { color: #9ca3af; margin-bottom: 24px; font-size: 14px; }
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .stat-card {
+    background: #1a1d27;
+    border: 1px solid #2a2e3a;
+    border-radius: 12px;
+    padding: 16px;
+  }
+  .stat-label { font-size: 12px; color: #9ca3af; margin-bottom: 6px; }
+  .stat-value { font-size: 22px; font-weight: 600; }
+  .agents-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .agent-card {
+    background: #1a1d27;
+    border: 1px solid #2a2e3a;
+    border-radius: 12px;
+    padding: 18px;
+  }
+  .agent-icon { font-size: 24px; margin-bottom: 8px; }
+  .agent-name { font-weight: 600; margin-bottom: 4px; }
+  .agent-status {
+    display: inline-block;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: #14532d;
+    color: #86efac;
+    margin-bottom: 8px;
+  }
+  .agent-desc { font-size: 13px; color: #9ca3af; line-height: 1.5; }
+  .competitors {
+    background: #1a1d27;
+    border: 1px solid #2a2e3a;
+    border-radius: 12px;
+    padding: 16px;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: right; color: #9ca3af; font-weight: 500; padding: 8px; border-bottom: 1px solid #2a2e3a; }
+  td { padding: 8px; border-bottom: 1px solid #232635; }
+  .highlight-row td { color: #86efac; font-weight: 600; }
+  .updated { font-size: 12px; color: #6b7280; margin-top: 16px; }
+  #error { color: #f87171; padding: 16px; }
+</style>
+</head>
+<body>
+
+<h1>Content Agent Dashboard</h1>
+<div class="subtitle">طنزکارتون | Tanz Cartoon</div>
+
+<div id="content">در حال بارگذاری داده‌ها...</div>
+
+<script>
+async function loadDashboard() {
+  try {
+    const res = await fetch('data.json');
+    const data = await res.json();
+    const main = data.channels.main || {};
+    const container = document.getElementById('content');
+
+    let html = `
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">مشترکین</div>
+        <div class="stat-value">${Number(main.subscribers || 0).toLocaleString()}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">بازدید کل</div>
+        <div class="stat-value">${Number(main.views || 0).toLocaleString()}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">تعداد ویدیو</div>
+        <div class="stat-value">${Number(main.videos || 0).toLocaleString()}</div>
+      </div>
+    </div>
+
+    <div class="agents-grid">
+      <div class="agent-card">
+        <div class="agent-icon">💡</div>
+        <div class="agent-name">Ideator</div>
+        <div class="agent-status">فعال</div>
+        <div class="agent-desc">تحلیل رقبا و پیشنهاد ایده‌های محتوایی جدید بر اساس ترندهای موفق</div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-icon">✍️</div>
+        <div class="agent-name">Hook & Script</div>
+        <div class="agent-status">فعال</div>
+        <div class="agent-desc">نوشتن هوک و فیلم‌نامه بر اساس قالب تایید شده</div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-icon">📅</div>
+        <div class="agent-name">Planner</div>
+        <div class="agent-status">فعال</div>
+        <div class="agent-desc">برنامه‌ریزی تقویم روزانه انتشار محتوا</div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-icon">📊</div>
+        <div class="agent-name">Analyst</div>
+        <div class="agent-status">فعال</div>
+        <div class="agent-desc">تحلیل آمار کانال و رقبا، شناسایی روند رشد</div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-icon">💬</div>
+        <div class="agent-name">DM Manager</div>
+        <div class="agent-status">در حال توسعه</div>
+        <div class="agent-desc">مدیریت پیام‌های مستقیم و پاسخ‌گویی خودکار</div>
+      </div>
+    </div>
+
+    <div class="competitors">
+      <h3 style="margin-top:0; font-size:15px;">مقایسه با رقبا</h3>
+      <table>
+        <tr><th>کانال</th><th>مشترکین</th><th>بازدید</th><th>ویدیو</th></tr>
+    `;
+
+    for (const [key, ch] of Object.entries(data.channels)) {
+      const isMain = key === 'main';
+      html += `<tr class="${isMain ? 'highlight-row' : ''}">
+        <td>${ch.title || key}</td>
+        <td>${Number(ch.subscribers || 0).toLocaleString()}</td>
+        <td>${Number(ch.views || 0).toLocaleString()}</td>
+        <td>${Number(ch.videos || 0).toLocaleString()}</td>
+      </tr>`;
+    }
+
+    html += `</table></div>
+    <div class="updated">آخرین بروزرسانی: ${new Date(data.fetched_at).toLocaleString('fa-IR')}</div>`;
+
+    container.innerHTML = html;
+  } catch (e) {
+    document.getElementById('content').innerHTML =
+      '<div id="error">خطا در بارگذاری data.json: ' + e.message + '</div>';
+  }
+}
+
+loadDashboard();
+</script>
+
+</body>
+</html>
