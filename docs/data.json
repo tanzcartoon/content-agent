@@ -1,41 +1,41 @@
 {
-  "fetched_at": "2026-08-09T12:50:18.983753",
+  "fetched_at": "2026-08-10T20:06:17.120828",
   "channels": {
     "main": {
       "title": "Tanz Cartoon | طنزکارتون",
-      "subscribers": "740",
-      "views": "415896",
-      "videos": "43"
+      "subscribers": "779",
+      "views": "473580",
+      "videos": "45"
     },
     "competitor_1": {
       "title": "Arabic house remix ",
-      "subscribers": "11000",
-      "views": "21212859",
-      "videos": "179"
+      "subscribers": "11300",
+      "views": "22004465",
+      "videos": "187"
     },
     "competitor_2": {
       "title": "AIBebino",
-      "subscribers": "2880",
-      "views": "889624",
-      "videos": "49"
+      "subscribers": "3020",
+      "views": "942616",
+      "videos": "50"
     },
     "competitor_3_id": {
       "title": "تلخ اما واقعی (Bitter But True)",
-      "subscribers": "1010",
-      "views": "411696",
-      "videos": "19"
+      "subscribers": "1050",
+      "views": "425980",
+      "videos": "21"
     },
     "competitor_4": {
       "title": "Enam Khan",
-      "subscribers": "15700",
-      "views": "17775980",
-      "videos": "442"
+      "subscribers": "15900",
+      "views": "18141763",
+      "videos": "445"
     },
     "competitor_5": {
       "title": "Melody House MH AF",
-      "subscribers": "12500",
-      "views": "5411712",
-      "videos": "133"
+      "subscribers": "12600",
+      "views": "5500223",
+      "videos": "135"
     }
   }
 }
