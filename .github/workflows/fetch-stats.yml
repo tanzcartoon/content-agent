@@ -25,6 +25,12 @@ jobs:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
         run: python scripts/fetch_stats.py
 
+        - name: Generate scenario suggestion
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python scripts/suggest_scenario.py
+
       - name: Send Telegram report
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -35,6 +41,6 @@ jobs:
         run: |
           git config user.name "content-agent-bot"
           git config user.email "actions@github.com"
-          git add docs/data.json
+          git add docs/data.json docs/suggestion.json
           git diff --staged --quiet || git commit -m "Update stats data"
           git push
