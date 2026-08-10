@@ -145,6 +145,20 @@ async function loadDashboard() {
       </tr>`;
     }
 
+    try {
+      const sugRes = await fetch('suggestion.json');
+      const sugData = await sugRes.json();
+      const sug = sugData.suggestion || {};
+      html += `
+      <div class="competitors" style="margin-top:16px; border-color:#facc15;">
+        <h3 style="margin-top:0; font-size:15px; color:#facc15;">🎬 پیشنهاد سناریوی امروز</h3>
+        <div style="font-weight:600; margin-bottom:8px;">${sug.title || ''}</div>
+        <div style="font-size:13px; color:#9ca3af; margin-bottom:6px;"><b>هوک:</b> ${sug.hook || ''}</div>
+        <div style="font-size:13px; color:#e5e7eb; margin-bottom:6px;">${sug.scenario || ''}</div>
+        <div style="font-size:13px; color:#86efac;"><b>چرخش:</b> ${sug.twist || ''}</div>
+      </div>`;
+    } catch (e) {}
+    
     html += `</table></div>
     <div class="updated">آخرین بروزرسانی: ${new Date(data.fetched_at).toLocaleString('fa-IR')}</div>`;
 
