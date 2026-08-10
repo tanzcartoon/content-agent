@@ -37,7 +37,19 @@ def build_report():
         title = ch.get("title", key)
         subs = int(ch.get("subscribers", 0))
         lines.append(f"• {title}: {subs:,} مشترک")
-
+    try:
+        with open("docs/suggestion.json", "r", encoding="utf-8") as sf:
+            sug_data = json.load(sf)
+            sug = sug_data.get("suggestion", {})
+            lines.append("")
+            lines.append("🎬 <b>پیشنهاد سناریوی امروز</b>")
+            lines.append(f"📌 {sug.get('title', '')}")
+            lines.append(f"🎯 هوک: {sug.get('hook', '')}")
+            lines.append(f"📝 {sug.get('scenario', '')}")
+            lines.append(f"🔄 چرخش: {sug.get('twist', '')}")
+    except (FileNotFoundError, json.JSONDecodeError):
+        pass
+        
     lines.append("")
     lines.append(f"🕐 بروزرسانی: {data.get('fetched_at', '')}")
     lines.append("🔗 داشبورد: https://tanzcartoon.github.io/content-agent/")
