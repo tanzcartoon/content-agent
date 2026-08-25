@@ -1,42 +1,34 @@
 name: Fetch YouTube Stats
-
 on:
   workflow_dispatch:
   schedule:
     - cron: '0 6 * * *'
-
 jobs:
   fetch:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
       - name: Install dependencies
-        run: pip install requests
-
+        run: pip install -r requirements.txt
       - name: Run fetch script
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
         run: python scripts/fetch_stats.py
-
-        - name: Generate scenario suggestion
+      - name: Generate scenario suggestion
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python scripts/suggest_scenario.py
-
       - name: Send Telegram report
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python scripts/send_telegram.py
-
       - name: Commit updated data
         run: |
           git config user.name "content-agent-bot"
