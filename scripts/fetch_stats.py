@@ -94,8 +94,9 @@ def get_transcript(video_id):
     """
     try:
         from youtube_transcript_api import YouTubeTranscriptApi
-        transcript_list = YouTubeTranscriptApi.get_transcript(video_id, languages=["fa", "ps", "en"])
-        return " ".join(chunk["text"] for chunk in transcript_list)
+        ytt_api = YouTubeTranscriptApi()
+        fetched = ytt_api.fetch(video_id, languages=["fa", "ps", "en"])
+        return " ".join(snippet.text for snippet in fetched)
     except Exception as e:
         return f"[transcript not available: {e}]"
 
