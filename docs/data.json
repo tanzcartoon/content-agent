@@ -1,68 +1,90 @@
 {
-  "fetched_at": "2026-08-26T19:42:06.834755",
+  "fetched_at": "2026-08-28T21:28:37.505207",
   "channels": {
     "main": {
       "title": "Tanz Cartoon | طنزکارتون",
-      "subscribers": "859",
-      "views": "570203",
-      "videos": "56",
+      "subscribers": "868",
+      "views": "576235",
+      "videos": "58",
       "uploads_playlist_id": "UUcmlsZ28iDobJQ9LaN5akew"
     },
     "competitor_1": {
       "title": "Arabic house remix ",
-      "subscribers": "16700",
-      "views": "34404263",
-      "videos": "284",
+      "subscribers": "17200",
+      "views": "36067670",
+      "videos": "296",
       "uploads_playlist_id": "UUree1QaauCefJa5zKD4gmgg"
     },
     "competitor_2": {
       "title": "AIBebino",
-      "subscribers": "4510",
-      "views": "1608938",
-      "videos": "63",
+      "subscribers": "4640",
+      "views": "1647371",
+      "videos": "65",
       "uploads_playlist_id": "UUKxAUtw_rbw3Ke7B_l3wbCw"
     },
     "competitor_3_id": {
       "title": "تلخ اما واقعی (Bitter But True)",
-      "subscribers": "1310",
-      "views": "574010",
-      "videos": "26",
+      "subscribers": "1320",
+      "views": "579432",
+      "videos": "27",
       "uploads_playlist_id": "UU_woxD5GYiaCfxHyjiuUAHg"
     },
     "competitor_4": {
       "title": "Enam Khan",
-      "subscribers": "19400",
-      "views": "24467372",
-      "videos": "476",
+      "subscribers": "19700",
+      "views": "25071714",
+      "videos": "481",
       "uploads_playlist_id": "UUzl4kxJOo6Q1QOg5TZDYvYw"
     },
     "competitor_5": {
       "title": "Melody House MH AF",
       "subscribers": "13600",
-      "views": "6806103",
-      "videos": "157",
+      "views": "6874724",
+      "videos": "159",
       "uploads_playlist_id": "UU5dUIxBQisZKgnQR2uTNtPw"
     }
   },
   "videos": [
+    {
+      "video_id": "hDo71PgNCwo",
+      "title": "دزد و مادرکلان 🥷 | دزد گیر مادرکلان افتاده 💀 #shorts #video #free-talk-1 #melodi_land",
+      "description": "دزد و مادرکلان 🥷 | دزد گیر مادرکلان افتاده 💀 \n#shorts #video #free-talk-1 #melodi_land #funny #pfypシ #comedy #theif #grandmother #jokes #طنز #خنده #کمدی #کمدین #شوخی #مادرکلان",
+      "published_at": "2026-08-28T15:02:02Z",
+      "duration": "PT41S",
+      "views": "1356",
+      "likes": "22",
+      "comments": "8",
+      "transcript": "[transcript not available: \nCould not retrieve a transcript for the video https://www.youtube.com/watch?v=hDo71PgNCwo! This is most likely caused by:\n\nYouTube is blocking requests from your IP. This usually is due to one of the following reasons:\n- You have done too many requests and your IP has been blocked by YouTube\n- You are doing requests from an IP belonging to a cloud provider (like AWS, Google Cloud Platform, Azure, etc.). Unfortunately, most IPs from cloud providers are blocked by YouTube.\n\nThere are two things you can do to work around this:\n1. Use proxies to hide your IP address, as explained in the \"Working around IP bans\" section of the README (https://github.com/jdepoix/youtube-transcript-api?tab=readme-ov-file#working-around-ip-bans-requestblocked-or-ipblocked-exception).\n2. (NOT RECOMMENDED) If you authenticate your requests using cookies, you will be able to continue doing requests for a while. However, YouTube will eventually permanently ban the account that you have used to authenticate with! So only do this if you don't mind your account being banned!\n\nIf you are sure that the described cause is not responsible for this error and that a transcript should be retrievable, please create an issue at https://github.com/jdepoix/youtube-transcript-api/issues. Please add which version of youtube_transcript_api you are using and provide the information needed to replicate the error. Also make sure that there are no open issues which already describe your problem!]"
+    },
+    {
+      "video_id": "G4bJxe4ZpRE",
+      "title": "مهمان های بی وقت 😱 | فاجعه بزرگ مهمان 😱| مهمان ناخوانده 💀",
+      "description": "مهمان های بی وقت 😱 | فاجعه بزرگ مهمان 😱| مهمان ناخوانده 💀\n#shorts #funny #tanzcartoon #comedy #طنز #آشپزی #خنده_دار #مادربزرگ #کلیپ_طنز #سرآشپز \n\nطنز آشپزی \nمهمان ناخوانده طنز \nسر آشپز بیچاره \nکلیپ خنده‌دار \nفاجعه در آشپزخانه \nچالش آشپزی طنز \nطنز یوتیوب فارسی \nویدیو کوتاه خنده‌دار \nمادرکلان سختگیر",
+      "published_at": "2026-08-27T15:00:17Z",
+      "duration": "PT37S",
+      "views": "1420",
+      "likes": null,
+      "comments": "6",
+      "transcript": "[transcript not available: \nCould not retrieve a transcript for the video https://www.youtube.com/watch?v=G4bJxe4ZpRE! This is most likely caused by:\n\nYouTube is blocking requests from your IP. This usually is due to one of the following reasons:\n- You have done too many requests and your IP has been blocked by YouTube\n- You are doing requests from an IP belonging to a cloud provider (like AWS, Google Cloud Platform, Azure, etc.). Unfortunately, most IPs from cloud providers are blocked by YouTube.\n\nThere are two things you can do to work around this:\n1. Use proxies to hide your IP address, as explained in the \"Working around IP bans\" section of the README (https://github.com/jdepoix/youtube-transcript-api?tab=readme-ov-file#working-around-ip-bans-requestblocked-or-ipblocked-exception).\n2. (NOT RECOMMENDED) If you authenticate your requests using cookies, you will be able to continue doing requests for a while. However, YouTube will eventually permanently ban the account that you have used to authenticate with! So only do this if you don't mind your account being banned!\n\nIf you are sure that the described cause is not responsible for this error and that a transcript should be retrievable, please create an issue at https://github.com/jdepoix/youtube-transcript-api/issues. Please add which version of youtube_transcript_api you are using and provide the information needed to replicate the error. Also make sure that there are no open issues which already describe your problem!]"
+    },
     {
       "video_id": "AxXRONFZLoM",
       "title": "رادار مادرکلان فعال شد 🚨 | فرار از مادرکلان #shorts #funny #comedy",
       "description": "رادار مادرکلان فعال شد 🚨 | فرار از مادرکلان\n#shorts #funny #comedy #jokes #طنز #طنز_شوخ #خنده #مادرکلان #طنزکارتون\n\nمادرکلان، فرار از مادرکلان، طنز افغانی، کمدی افغانی، مادرکلان سختگیر",
       "published_at": "2026-08-26T15:49:41Z",
       "duration": "PT28S",
-      "views": "890",
+      "views": "4221",
       "likes": null,
-      "comments": "0",
+      "comments": "4",
       "transcript": "[transcript not available: \nCould not retrieve a transcript for the video https://www.youtube.com/watch?v=AxXRONFZLoM! This is most likely caused by:\n\nYouTube is blocking requests from your IP. This usually is due to one of the following reasons:\n- You have done too many requests and your IP has been blocked by YouTube\n- You are doing requests from an IP belonging to a cloud provider (like AWS, Google Cloud Platform, Azure, etc.). Unfortunately, most IPs from cloud providers are blocked by YouTube.\n\nThere are two things you can do to work around this:\n1. Use proxies to hide your IP address, as explained in the \"Working around IP bans\" section of the README (https://github.com/jdepoix/youtube-transcript-api?tab=readme-ov-file#working-around-ip-bans-requestblocked-or-ipblocked-exception).\n2. (NOT RECOMMENDED) If you authenticate your requests using cookies, you will be able to continue doing requests for a while. However, YouTube will eventually permanently ban the account that you have used to authenticate with! So only do this if you don't mind your account being banned!\n\nIf you are sure that the described cause is not responsible for this error and that a transcript should be retrievable, please create an issue at https://github.com/jdepoix/youtube-transcript-api/issues. Please add which version of youtube_transcript_api you are using and provide the information needed to replicate the error. Also make sure that there are no open issues which already describe your problem!]"
     },
     {
       "video_id": "CUjincBzSfU",
-      "title": "دیدن دختر برای نواسه | مادرکلان در باره دختر همه چیز را فاش کرد | عشق نواسه تا خواستگاری ",
+      "title": "قسمت دوم | دیدن دختر برای نواسه | مادرکلان در باره دختر همه چیز را فاش کرد | عشق نواسه تا خواستگاری ",
       "description": "دیدن دختر برای نواسه | مادرکلان در باره دختر همه چیز را فاش کرد | عشق نواسه تا خواستگاری \nAfghan comedy family, dari comedy long video \n#pageforyou #longvideo #viral #comedy #tanzcartoon #طنز #خواستگاری #مادر #طنزکارتون #pfypシ #video #funny",
       "published_at": "2026-08-25T05:05:07Z",
       "duration": "PT3M9S",
-      "views": "53",
+      "views": "82",
       "likes": null,
       "comments": "19",
       "transcript": "[transcript not available: \nCould not retrieve a transcript for the video https://www.youtube.com/watch?v=CUjincBzSfU! This is most likely caused by:\n\nYouTube is blocking requests from your IP. This usually is due to one of the following reasons:\n- You have done too many requests and your IP has been blocked by YouTube\n- You are doing requests from an IP belonging to a cloud provider (like AWS, Google Cloud Platform, Azure, etc.). Unfortunately, most IPs from cloud providers are blocked by YouTube.\n\nThere are two things you can do to work around this:\n1. Use proxies to hide your IP address, as explained in the \"Working around IP bans\" section of the README (https://github.com/jdepoix/youtube-transcript-api?tab=readme-ov-file#working-around-ip-bans-requestblocked-or-ipblocked-exception).\n2. (NOT RECOMMENDED) If you authenticate your requests using cookies, you will be able to continue doing requests for a while. However, YouTube will eventually permanently ban the account that you have used to authenticate with! So only do this if you don't mind your account being banned!\n\nIf you are sure that the described cause is not responsible for this error and that a transcript should be retrievable, please create an issue at https://github.com/jdepoix/youtube-transcript-api/issues. Please add which version of youtube_transcript_api you are using and provide the information needed to replicate the error. Also make sure that there are no open issues which already describe your problem!]"
@@ -73,9 +95,9 @@
       "description": "بدترین تحفه شوهرم 😱 | خراب ترین تحفه شوهر برای خانم 😰 | تحفه گنده شوهر \n #shorts #funny #tanzcartoon #tanz #طنز #طنز_شوخ #هدیه #خنده #افغانستان #تاجیکستان #ایران",
       "published_at": "2026-08-24T05:05:06Z",
       "duration": "PT50S",
-      "views": "1527",
+      "views": "1831",
       "likes": null,
-      "comments": "1",
+      "comments": "3",
       "transcript": "[transcript not available: \nCould not retrieve a transcript for the video https://www.youtube.com/watch?v=QLsscLChV30! This is most likely caused by:\n\nYouTube is blocking requests from your IP. This usually is due to one of the following reasons:\n- You have done too many requests and your IP has been blocked by YouTube\n- You are doing requests from an IP belonging to a cloud provider (like AWS, Google Cloud Platform, Azure, etc.). Unfortunately, most IPs from cloud providers are blocked by YouTube.\n\nThere are two things you can do to work around this:\n1. Use proxies to hide your IP address, as explained in the \"Working around IP bans\" section of the README (https://github.com/jdepoix/youtube-transcript-api?tab=readme-ov-file#working-around-ip-bans-requestblocked-or-ipblocked-exception).\n2. (NOT RECOMMENDED) If you authenticate your requests using cookies, you will be able to continue doing requests for a while. However, YouTube will eventually permanently ban the account that you have used to authenticate with! So only do this if you don't mind your account being banned!\n\nIf you are sure that the described cause is not responsible for this error and that a transcript should be retrievable, please create an issue at https://github.com/jdepoix/youtube-transcript-api/issues. Please add which version of youtube_transcript_api you are using and provide the information needed to replicate the error. Also make sure that there are no open issues which already describe your problem!]"
     },
     {
@@ -84,9 +106,9 @@
       "description": "درخواست عروس از هوش مصنوعی | زن خواستن از هوش مصنوعی | خواستن همسفر زنده گی\n#shorts #comedy #هوش_مصنوعی #طنز_شوخ #کمدی #tanzcartoon #chatgpt #خنده #افغانستان \n#amirata_b #rezazakeriofficial",
       "published_at": "2026-08-23T05:05:07Z",
       "duration": "PT41S",
-      "views": "3213",
+      "views": "3262",
       "likes": null,
-      "comments": "1",
+      "comments": "2",
       "transcript": "[transcript not available: \nCould not retrieve a transcript for the video https://www.youtube.com/watch?v=frorxKQZBvE! This is most likely caused by:\n\nYouTube is blocking requests from your IP. This usually is due to one of the following reasons:\n- You have done too many requests and your IP has been blocked by YouTube\n- You are doing requests from an IP belonging to a cloud provider (like AWS, Google Cloud Platform, Azure, etc.). Unfortunately, most IPs from cloud providers are blocked by YouTube.\n\nThere are two things you can do to work around this:\n1. Use proxies to hide your IP address, as explained in the \"Working around IP bans\" section of the README (https://github.com/jdepoix/youtube-transcript-api?tab=readme-ov-file#working-around-ip-bans-requestblocked-or-ipblocked-exception).\n2. (NOT RECOMMENDED) If you authenticate your requests using cookies, you will be able to continue doing requests for a while. However, YouTube will eventually permanently ban the account that you have used to authenticate with! So only do this if you don't mind your account being banned!\n\nIf you are sure that the described cause is not responsible for this error and that a transcript should be retrievable, please create an issue at https://github.com/jdepoix/youtube-transcript-api/issues. Please add which version of youtube_transcript_api you are using and provide the information needed to replicate the error. Also make sure that there are no open issues which already describe your problem!]"
     },
     {
@@ -95,7 +117,7 @@
       "description": "جاسوسی مادرکلان از خانه و نواسه 🧐 | درد سر های زنده گی با مادرکلان همه را میداند\n #shorts #funny #tanzcartoon #مادرکلان #کمدی #خنده #فان #افغانستان #تاجیکستان #ایران",
       "published_at": "2026-08-22T05:05:35Z",
       "duration": "PT40S",
-      "views": "3270",
+      "views": "3303",
       "likes": null,
       "comments": "5",
       "transcript": "[transcript not available: \nCould not retrieve a transcript for the video https://www.youtube.com/watch?v=LysVb3AD4Xg! This is most likely caused by:\n\nYouTube is blocking requests from your IP. This usually is due to one of the following reasons:\n- You have done too many requests and your IP has been blocked by YouTube\n- You are doing requests from an IP belonging to a cloud provider (like AWS, Google Cloud Platform, Azure, etc.). Unfortunately, most IPs from cloud providers are blocked by YouTube.\n\nThere are two things you can do to work around this:\n1. Use proxies to hide your IP address, as explained in the \"Working around IP bans\" section of the README (https://github.com/jdepoix/youtube-transcript-api?tab=readme-ov-file#working-around-ip-bans-requestblocked-or-ipblocked-exception).\n2. (NOT RECOMMENDED) If you authenticate your requests using cookies, you will be able to continue doing requests for a while. However, YouTube will eventually permanently ban the account that you have used to authenticate with! So only do this if you don't mind your account being banned!\n\nIf you are sure that the described cause is not responsible for this error and that a transcript should be retrievable, please create an issue at https://github.com/jdepoix/youtube-transcript-api/issues. Please add which version of youtube_transcript_api you are using and provide the information needed to replicate the error. Also make sure that there are no open issues which already describe your problem!]"
@@ -106,7 +128,7 @@
       "description": "مهمان نوازی | تعارف برای مهمان | مهمان دوست خداست\n#shorts #trending #viral  #comedy #funny #طنز #طنز_شوخ #طنزخنده #افغانستان #شورت \nمهمان نوازی افغانها \nGuests \nمهمان",
       "published_at": "2026-08-20T16:23:34Z",
       "duration": "PT46S",
-      "views": "4143",
+      "views": "4168",
       "likes": null,
       "comments": "5",
       "transcript": "[transcript not available: \nCould not retrieve a transcript for the video https://www.youtube.com/watch?v=ffP_yvCHrts! This is most likely caused by:\n\nYouTube is blocking requests from your IP. This usually is due to one of the following reasons:\n- You have done too many requests and your IP has been blocked by YouTube\n- You are doing requests from an IP belonging to a cloud provider (like AWS, Google Cloud Platform, Azure, etc.). Unfortunately, most IPs from cloud providers are blocked by YouTube.\n\nThere are two things you can do to work around this:\n1. Use proxies to hide your IP address, as explained in the \"Working around IP bans\" section of the README (https://github.com/jdepoix/youtube-transcript-api?tab=readme-ov-file#working-around-ip-bans-requestblocked-or-ipblocked-exception).\n2. (NOT RECOMMENDED) If you authenticate your requests using cookies, you will be able to continue doing requests for a while. However, YouTube will eventually permanently ban the account that you have used to authenticate with! So only do this if you don't mind your account being banned!\n\nIf you are sure that the described cause is not responsible for this error and that a transcript should be retrievable, please create an issue at https://github.com/jdepoix/youtube-transcript-api/issues. Please add which version of youtube_transcript_api you are using and provide the information needed to replicate the error. Also make sure that there are no open issues which already describe your problem!]"
@@ -117,7 +139,7 @@
       "description": "روز اول در خارج | فرار از پله برقی | وقتی اولین بار به خارج رفته بودم\n #shorts #amirata_b #music2-b3k #comedy #funny #tanzcartoon #طنزـافغانی #خنده_دار #سفر #افغانستان",
       "published_at": "2026-08-19T16:09:49Z",
       "duration": "PT46S",
-      "views": "1752",
+      "views": "1761",
       "likes": null,
       "comments": "5",
       "transcript": "[transcript not available: \nCould not retrieve a transcript for the video https://www.youtube.com/watch?v=n5xOzEtGIag! This is most likely caused by:\n\nYouTube is blocking requests from your IP. This usually is due to one of the following reasons:\n- You have done too many requests and your IP has been blocked by YouTube\n- You are doing requests from an IP belonging to a cloud provider (like AWS, Google Cloud Platform, Azure, etc.). Unfortunately, most IPs from cloud providers are blocked by YouTube.\n\nThere are two things you can do to work around this:\n1. Use proxies to hide your IP address, as explained in the \"Working around IP bans\" section of the README (https://github.com/jdepoix/youtube-transcript-api?tab=readme-ov-file#working-around-ip-bans-requestblocked-or-ipblocked-exception).\n2. (NOT RECOMMENDED) If you authenticate your requests using cookies, you will be able to continue doing requests for a while. However, YouTube will eventually permanently ban the account that you have used to authenticate with! So only do this if you don't mind your account being banned!\n\nIf you are sure that the described cause is not responsible for this error and that a transcript should be retrievable, please create an issue at https://github.com/jdepoix/youtube-transcript-api/issues. Please add which version of youtube_transcript_api you are using and provide the information needed to replicate the error. Also make sure that there are no open issues which already describe your problem!]"
@@ -128,9 +150,9 @@
       "description": "نواسه عاشق شده مادرکلان جاسوس | عاشق شدن نواسه بالای دختر بیگانه | عاشق دیوانه شدن \n#long #video #promo #viral #funny #طنز #افغانستان #ایران #تاجیکستان #خنده #عاشقانه #شوخی",
       "published_at": "2026-08-18T17:34:49Z",
       "duration": "PT2M51S",
-      "views": "75",
+      "views": "89",
       "likes": null,
-      "comments": "10",
+      "comments": "11",
       "transcript": "[transcript not available: \nCould not retrieve a transcript for the video https://www.youtube.com/watch?v=wZfV4C-G3yQ! This is most likely caused by:\n\nYouTube is blocking requests from your IP. This usually is due to one of the following reasons:\n- You have done too many requests and your IP has been blocked by YouTube\n- You are doing requests from an IP belonging to a cloud provider (like AWS, Google Cloud Platform, Azure, etc.). Unfortunately, most IPs from cloud providers are blocked by YouTube.\n\nThere are two things you can do to work around this:\n1. Use proxies to hide your IP address, as explained in the \"Working around IP bans\" section of the README (https://github.com/jdepoix/youtube-transcript-api?tab=readme-ov-file#working-around-ip-bans-requestblocked-or-ipblocked-exception).\n2. (NOT RECOMMENDED) If you authenticate your requests using cookies, you will be able to continue doing requests for a while. However, YouTube will eventually permanently ban the account that you have used to authenticate with! So only do this if you don't mind your account being banned!\n\nIf you are sure that the described cause is not responsible for this error and that a transcript should be retrievable, please create an issue at https://github.com/jdepoix/youtube-transcript-api/issues. Please add which version of youtube_transcript_api you are using and provide the information needed to replicate the error. Also make sure that there are no open issues which already describe your problem!]"
     },
     {
@@ -139,7 +161,7 @@
       "description": "مادرکلان شک کرد! هندزفری یا جن | وقتیکه در فون گپ میزنی | شک های بیجا در پشت تیلفون \n#shorts #tanzcartoon #funny #یوتیوب_شورت #مادرکلان #طنز_شوخ #کمدی \n#growyourchannel #youtubelikes #youtubeviral #youtubereaction #ytshorts",
       "published_at": "2026-08-17T16:09:54Z",
       "duration": "PT41S",
-      "views": "1297",
+      "views": "1301",
       "likes": null,
       "comments": "7",
       "transcript": "[transcript not available: \nCould not retrieve a transcript for the video https://www.youtube.com/watch?v=hCFtNnydUAk! This is most likely caused by:\n\nYouTube is blocking requests from your IP. This usually is due to one of the following reasons:\n- You have done too many requests and your IP has been blocked by YouTube\n- You are doing requests from an IP belonging to a cloud provider (like AWS, Google Cloud Platform, Azure, etc.). Unfortunately, most IPs from cloud providers are blocked by YouTube.\n\nThere are two things you can do to work around this:\n1. Use proxies to hide your IP address, as explained in the \"Working around IP bans\" section of the README (https://github.com/jdepoix/youtube-transcript-api?tab=readme-ov-file#working-around-ip-bans-requestblocked-or-ipblocked-exception).\n2. (NOT RECOMMENDED) If you authenticate your requests using cookies, you will be able to continue doing requests for a while. However, YouTube will eventually permanently ban the account that you have used to authenticate with! So only do this if you don't mind your account being banned!\n\nIf you are sure that the described cause is not responsible for this error and that a transcript should be retrievable, please create an issue at https://github.com/jdepoix/youtube-transcript-api/issues. Please add which version of youtube_transcript_api you are using and provide the information needed to replicate the error. Also make sure that there are no open issues which already describe your problem!]"
@@ -150,7 +172,7 @@
       "description": "وقتیکه روز مهم زنده گی یادت میرود 🤦 | تاریخی سالگرد ازدواج یادت رفته🤔 | فراموش تاریخ های مهم 😱\n#shorts #videoshort #comedy #funny #fypシ #tanzcartoon #طنز #طنز_شوخ #شوخی #افغانستان #ازدواج #فراموشی",
       "published_at": "2026-08-15T16:56:04Z",
       "duration": "PT43S",
-      "views": "2751",
+      "views": "2773",
       "likes": null,
       "comments": "6",
       "transcript": "[transcript not available: \nCould not retrieve a transcript for the video https://www.youtube.com/watch?v=fwtB8nZLgzM! This is most likely caused by:\n\nYouTube is blocking requests from your IP. This usually is due to one of the following reasons:\n- You have done too many requests and your IP has been blocked by YouTube\n- You are doing requests from an IP belonging to a cloud provider (like AWS, Google Cloud Platform, Azure, etc.). Unfortunately, most IPs from cloud providers are blocked by YouTube.\n\nThere are two things you can do to work around this:\n1. Use proxies to hide your IP address, as explained in the \"Working around IP bans\" section of the README (https://github.com/jdepoix/youtube-transcript-api?tab=readme-ov-file#working-around-ip-bans-requestblocked-or-ipblocked-exception).\n2. (NOT RECOMMENDED) If you authenticate your requests using cookies, you will be able to continue doing requests for a while. However, YouTube will eventually permanently ban the account that you have used to authenticate with! So only do this if you don't mind your account being banned!\n\nIf you are sure that the described cause is not responsible for this error and that a transcript should be retrievable, please create an issue at https://github.com/jdepoix/youtube-transcript-api/issues. Please add which version of youtube_transcript_api you are using and provide the information needed to replicate the error. Also make sure that there are no open issues which already describe your problem!]"
@@ -161,7 +183,7 @@
       "description": "شکایت مادرکلان دروغگویی نواسه 😰😨 #shorts #funny #celinedept #mrbeast #comedy #jokes #خنده #طنز #خنده_دار #طنز_شوخ #مادرکلان #نواسه",
       "published_at": "2026-08-14T16:20:51Z",
       "duration": "PT41S",
-      "views": "2030",
+      "views": "2036",
       "likes": null,
       "comments": "5",
       "transcript": "[transcript not available: \nCould not retrieve a transcript for the video https://www.youtube.com/watch?v=8d5GA_XQbbA! This is most likely caused by:\n\nYouTube is blocking requests from your IP. This usually is due to one of the following reasons:\n- You have done too many requests and your IP has been blocked by YouTube\n- You are doing requests from an IP belonging to a cloud provider (like AWS, Google Cloud Platform, Azure, etc.). Unfortunately, most IPs from cloud providers are blocked by YouTube.\n\nThere are two things you can do to work around this:\n1. Use proxies to hide your IP address, as explained in the \"Working around IP bans\" section of the README (https://github.com/jdepoix/youtube-transcript-api?tab=readme-ov-file#working-around-ip-bans-requestblocked-or-ipblocked-exception).\n2. (NOT RECOMMENDED) If you authenticate your requests using cookies, you will be able to continue doing requests for a while. However, YouTube will eventually permanently ban the account that you have used to authenticate with! So only do this if you don't mind your account being banned!\n\nIf you are sure that the described cause is not responsible for this error and that a transcript should be retrievable, please create an issue at https://github.com/jdepoix/youtube-transcript-api/issues. Please add which version of youtube_transcript_api you are using and provide the information needed to replicate the error. Also make sure that there are no open issues which already describe your problem!]"
@@ -172,7 +194,7 @@
       "description": "حسادت مادرکلان از خانم نواسه ... 😡 #shorts #comedy #funny #mrbeast #طنز #افغانستان #",
       "published_at": "2026-08-13T16:57:17Z",
       "duration": "PT42S",
-      "views": "2999",
+      "views": "3001",
       "likes": null,
       "comments": "7",
       "transcript": "[transcript not available: \nCould not retrieve a transcript for the video https://www.youtube.com/watch?v=3M3f0F4-wbE! This is most likely caused by:\n\nYouTube is blocking requests from your IP. This usually is due to one of the following reasons:\n- You have done too many requests and your IP has been blocked by YouTube\n- You are doing requests from an IP belonging to a cloud provider (like AWS, Google Cloud Platform, Azure, etc.). Unfortunately, most IPs from cloud providers are blocked by YouTube.\n\nThere are two things you can do to work around this:\n1. Use proxies to hide your IP address, as explained in the \"Working around IP bans\" section of the README (https://github.com/jdepoix/youtube-transcript-api?tab=readme-ov-file#working-around-ip-bans-requestblocked-or-ipblocked-exception).\n2. (NOT RECOMMENDED) If you authenticate your requests using cookies, you will be able to continue doing requests for a while. However, YouTube will eventually permanently ban the account that you have used to authenticate with! So only do this if you don't mind your account being banned!\n\nIf you are sure that the described cause is not responsible for this error and that a transcript should be retrievable, please create an issue at https://github.com/jdepoix/youtube-transcript-api/issues. Please add which version of youtube_transcript_api you are using and provide the information needed to replicate the error. Also make sure that there are no open issues which already describe your problem!]"
@@ -183,32 +205,10 @@
       "description": "وقتی مادرکلان پیام خصوصی را عمومی روان میکند اما..... 😱😱 #shorts #comedy #اکسپلور #shortvideo \n#funny #jokes #طنز #افغانستان #ایرانی",
       "published_at": "2026-08-12T16:09:57Z",
       "duration": "PT37S",
-      "views": "2036",
+      "views": "2037",
       "likes": null,
       "comments": "8",
       "transcript": "[transcript not available: \nCould not retrieve a transcript for the video https://www.youtube.com/watch?v=laMP9jyws3I! This is most likely caused by:\n\nYouTube is blocking requests from your IP. This usually is due to one of the following reasons:\n- You have done too many requests and your IP has been blocked by YouTube\n- You are doing requests from an IP belonging to a cloud provider (like AWS, Google Cloud Platform, Azure, etc.). Unfortunately, most IPs from cloud providers are blocked by YouTube.\n\nThere are two things you can do to work around this:\n1. Use proxies to hide your IP address, as explained in the \"Working around IP bans\" section of the README (https://github.com/jdepoix/youtube-transcript-api?tab=readme-ov-file#working-around-ip-bans-requestblocked-or-ipblocked-exception).\n2. (NOT RECOMMENDED) If you authenticate your requests using cookies, you will be able to continue doing requests for a while. However, YouTube will eventually permanently ban the account that you have used to authenticate with! So only do this if you don't mind your account being banned!\n\nIf you are sure that the described cause is not responsible for this error and that a transcript should be retrievable, please create an issue at https://github.com/jdepoix/youtube-transcript-api/issues. Please add which version of youtube_transcript_api you are using and provide the information needed to replicate the error. Also make sure that there are no open issues which already describe your problem!]"
-    },
-    {
-      "video_id": "oPSjmNZlBIE",
-      "title": "سلفی گرفتن مادرکلان اما ...... 😩 #shorts #comedy #mahyar.20 #bibishorts2025 #life #save",
-      "description": "سلفی گرفتن مادرکلان اما ...... 😩 #shorts #comedy #mahyar.20 #bibishorts2025 #life #save \n#funny #طنز #شوخی #افغانستان #ایران #تاجکستان #مادرکلان",
-      "published_at": "2026-08-11T16:08:29Z",
-      "duration": "PT40S",
-      "views": "3514",
-      "likes": null,
-      "comments": "6",
-      "transcript": "[transcript not available: \nCould not retrieve a transcript for the video https://www.youtube.com/watch?v=oPSjmNZlBIE! This is most likely caused by:\n\nYouTube is blocking requests from your IP. This usually is due to one of the following reasons:\n- You have done too many requests and your IP has been blocked by YouTube\n- You are doing requests from an IP belonging to a cloud provider (like AWS, Google Cloud Platform, Azure, etc.). Unfortunately, most IPs from cloud providers are blocked by YouTube.\n\nThere are two things you can do to work around this:\n1. Use proxies to hide your IP address, as explained in the \"Working around IP bans\" section of the README (https://github.com/jdepoix/youtube-transcript-api?tab=readme-ov-file#working-around-ip-bans-requestblocked-or-ipblocked-exception).\n2. (NOT RECOMMENDED) If you authenticate your requests using cookies, you will be able to continue doing requests for a while. However, YouTube will eventually permanently ban the account that you have used to authenticate with! So only do this if you don't mind your account being banned!\n\nIf you are sure that the described cause is not responsible for this error and that a transcript should be retrievable, please create an issue at https://github.com/jdepoix/youtube-transcript-api/issues. Please add which version of youtube_transcript_api you are using and provide the information needed to replicate the error. Also make sure that there are no open issues which already describe your problem!]"
-    },
-    {
-      "video_id": "38ECHpIc6Pc",
-      "title": "راز نواسه افشای شد ادامه در کنمت و کپشن 😱 #shorts #comedy #reels #laughing #fun",
-      "description": "راز نواسه افشای شد ادامه در کنمت و کپشن 😱 #shorts #comedy #reels #laughing #fun #videoviral #viral #طنز #طنز_شوخ #طنزخنده #افغانستان \n\nhttps://youtu.be/NCgEst0GLfs?si=vfIW5giR7DomIdTi",
-      "published_at": "2026-08-10T16:34:36Z",
-      "duration": "PT33S",
-      "views": "2464",
-      "likes": null,
-      "comments": "7",
-      "transcript": "[transcript not available: \nCould not retrieve a transcript for the video https://www.youtube.com/watch?v=38ECHpIc6Pc! This is most likely caused by:\n\nYouTube is blocking requests from your IP. This usually is due to one of the following reasons:\n- You have done too many requests and your IP has been blocked by YouTube\n- You are doing requests from an IP belonging to a cloud provider (like AWS, Google Cloud Platform, Azure, etc.). Unfortunately, most IPs from cloud providers are blocked by YouTube.\n\nThere are two things you can do to work around this:\n1. Use proxies to hide your IP address, as explained in the \"Working around IP bans\" section of the README (https://github.com/jdepoix/youtube-transcript-api?tab=readme-ov-file#working-around-ip-bans-requestblocked-or-ipblocked-exception).\n2. (NOT RECOMMENDED) If you authenticate your requests using cookies, you will be able to continue doing requests for a while. However, YouTube will eventually permanently ban the account that you have used to authenticate with! So only do this if you don't mind your account being banned!\n\nIf you are sure that the described cause is not responsible for this error and that a transcript should be retrievable, please create an issue at https://github.com/jdepoix/youtube-transcript-api/issues. Please add which version of youtube_transcript_api you are using and provide the information needed to replicate the error. Also make sure that there are no open issues which already describe your problem!]"
     }
   ]
 }
