@@ -1,18 +1,74 @@
 import os
 import json
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 
 YOUTUBE_API_KEY = os.environ.get("YOUTUBE_API_KEY")
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 CHANNEL_HANDLE = "tanzcartoon"
 
+GEMINI_MODEL = "gemini-3.8-flash"
+GEMINI_URL = (
+    "https://generativelanguage.googleapis.com/v1beta/models/"
+    + GEMINI_MODEL
+    + ":generateContent"
+)
 YOUTUBE_BASE = "https://www.googleapis.com/youtube/v3"
-GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent"
+
+# شخصیت‌های ثابت کانال. فقط از همین‌ها استفاده می‌شود.
+# اگر نام یا ویژگی‌ای باید عوض شود، همین‌جا ویرایش کن.
+CHARACTERS = [
+    "مادرکلان (حدود ۶۰ ساله، کمی عصبی و گلایه‌مند، با اعصاب خراب سؤال می‌کند)",
+    "نواسه (۲۵ ساله، آرام و ملایم، با آرامش جواب می‌دهد)",
+    "خانم نواسه (نسترن، ۲۲ ساله)",
+    "پدر نواسه (۴۲ ساله)",
+    "مادر نواسه (۴۰ ساله)",
+]
+
+SCHEMA = """{
+  "upload_time_kabul": "18:30",
+  "upload_reason": "دلیل انتخاب این ساعت در یک جمله",
+  "short": {
+    "title": "عنوان شورت",
+    "hook": "جمله‌ی هوک ۳ ثانیه‌ی اول",
+    "scenario": "شرح سناریو در ۳ تا ۴ جمله، با ذکر نام شخصیت‌ها",
+    "twist": "چرخش طنز پایانی",
+    "thumbnail_text": "متن کوتاه روی تامبنیل (حداکثر ۴ کلمه)",
+    "thumbnail_image": "توصیف تصویر تامبنیل در یک جمله",
+    "hashtags": ["#هشتگ۱", "#shorts"]
+  },
+  "long": {
+    "title": "عنوان ویدیوی طولانی",
+    "hook": "جمله‌ی هوک",
+    "scenario": "خلاصه‌ی داستان در ۳ تا ۴ جمله، با ذکر نام شخصیت‌ها",
+    "beats": [
+      "۱) هوک",
+      "۲) کاشتن نشانه",
+      "۳) رسوایی اصلی",
+      "۴) واکنش فیزیکی",
+      "۵) فرود و دعوت به اقدام"
+    ],
+    "thumbnail_text": "متن کوتاه روی تامبنیل (حداکثر ۴ کلمه)",
+    "thumbnail_image": "توصیف تصویر تامبنیل در یک جمله",
+    "hashtags": ["#هشتگ۱", "#هشتگ۲"]
+  }
+}"""
+
+
+def get_zone(name, offset_hours):
+    try:
+        return ZoneInfo(name)
+    except Exception:
+        return timezone(timedelta(hours=offset_hours))
+
+
+KABUL = get_zone("Asia/Kabul", 4.5)
+BERLIN = get_zone("Europe/Berlin", 1)
 
 
 def get_channel_id(handle):
-    url = f"{YOUTUBE_BASE}/channels"
+    url = YOUTUBE_BASE + "/channels"
     params = {"part": "id,contentDetails", "forHandle": handle, "key": YOUTUBE_API_KEY}
     r = requests.get(url, params=params).json()
     items = r.get("items", [])
@@ -21,10 +77,10 @@ def get_channel_id(handle):
     return items[0]["id"], items[0]["contentDetails"]["relatedPlaylists"]["uploads"]
 
 
-def get_recent_videos(uploads_playlist_id, max_results=8):
-    url = f"{YOUTUBE_BASE}/playlistItems"
+def get_recent_videos(uploads_playlist_id, max_results=10):
+    url = YOUTUBE_BASE + "/playlistItems"
     params = {
-        "part": "snippet",
+        "part": "snippet,contentDetails",
         "playlistId": uploads_playlist_id,
         "maxResults": max_results,
         "key": YOUTUBE_API_KEY,
@@ -33,10 +89,11 @@ def get_recent_videos(uploads_playlist_id, max_results=8):
     videos = []
     for item in r.get("items", []):
         sn = item["snippet"]
+        cd = item.get("contentDetails", {})
         videos.append({
             "title": sn.get("title", ""),
-            "description": (sn.get("description", "") or "")[:300],
-            "video_id": sn["resourceId"]["videoId"],
+            "video_id": cd.get("videoId") or sn["resourceId"]["videoId"],
+            "published_at": cd.get("videoPublishedAt") or sn.get("publishedAt", ""),
         })
     return videos
 
@@ -44,7 +101,7 @@ def get_recent_videos(uploads_playlist_id, max_results=8):
 def get_video_stats(video_ids):
     if not video_ids:
         return {}
-    url = f"{YOUTUBE_BASE}/videos"
+    url = YOUTUBE_BASE + "/videos"
     params = {"part": "statistics", "id": ",".join(video_ids), "key": YOUTUBE_API_KEY}
     r = requests.get(url, params=params).json()
     stats = {}
@@ -53,20 +110,54 @@ def get_video_stats(video_ids):
     return stats
 
 
-def build_prompt(videos):
-    lines = ["اینها آخرین ویدیوهای کانال طنز خانوادگی «طنزکارتون» با کاراکترهای ثابت مادرکلان و نواسه هستند:", ""]
-    for v in videos:
-        views = v.get("views", "?")
-        lines.append(f"- عنوان: {v['title']} | بازدید: {views} | توضیح: {v['description']}")
+def hour_kabul(iso_string):
+    try:
+        dt = datetime.fromisoformat(iso_string.replace("Z", "+00:00"))
+        return dt.astimezone(KABUL).strftime("%H:%M")
+    except Exception:
+        return "?"
 
+
+def format_upload_time(hhmm):
+    try:
+        hour, minute = [int(x) for x in str(hhmm).strip().split(":")[:2]]
+        now_kabul = datetime.now(KABUL)
+        target = now_kabul.replace(hour=hour, minute=minute, second=0, microsecond=0)
+        if target <= now_kabul:
+            target = target + timedelta(days=1)
+        day = "امروز" if target.date() == now_kabul.date() else "فردا"
+        target_berlin = target.astimezone(BERLIN)
+        return "{} ساعت {} به وقت افغانستان | {} به وقت اروپا (آلمان)".format(
+            day, target.strftime("%H:%M"), target_berlin.strftime("%H:%M")
+        )
+    except Exception:
+        return ""
+
+
+def build_prompt(videos):
+    lines = []
+    lines.append("تو دستیار تولید محتوای کانال یوتیوب طنز خانوادگی «طنزکارتون» هستی. مخاطب اصلی کانال مردم افغانستان‌اند.")
     lines.append("")
-    lines.append("با توجه به این ویدیوها، یک سناریوی طنز جدید (کوتاه، برای فرمت شورت ۴۰ تا ۶۰ ثانیه‌ای) با همان کاراکترهای مادرکلان و نواسه پیشنهاد بده که:")
-    lines.append("1. با موضوعات قبلی تکراری نباشد")
-    lines.append("2. یک هوک قوی در ۳ ثانیه‌ی اول داشته باشد")
-    lines.append("3. یک چرخش طنز (twist) در پایان داشته باشد")
+    lines.append("شخصیت‌های ثابت کانال (فقط از همین‌ها استفاده کن، هیچ شخصیت جدیدی اضافه نکن و نام یا نقش‌شان را عوض نکن):")
+    for c in CHARACTERS:
+        lines.append("- " + c)
     lines.append("")
-    lines.append("پاسخ را دقیقا به این فرمت JSON بده و هیچ متن اضافه‌ای ننویس:")
-    lines.append('{"title": "عنوان پیشنهادی", "hook": "جمله‌ی هوک ابتدایی", "scenario": "شرح کامل سناریو در ۳ تا ۴ جمله", "twist": "توضیح چرخش پایانی"}')
+    lines.append("آخرین ویدیوهای کانال (عنوان | بازدید | ساعت انتشار به وقت افغانستان):")
+    for v in videos:
+        lines.append("- {} | {} | {}".format(v["title"], v.get("views", "?"), v.get("hour_kabul", "?")))
+    lines.append("")
+    lines.append("قواعد:")
+    lines.append("1. همه‌ی متن‌ها به فارسی دری و لهجه‌ی افغانی باشد. از کلمات افغانی استفاده کن (پیسه به جای پول، وخت به جای وقت، گپ، حویلی، موتر، کلکین) و از کلمات ایرانی استفاده نکن.")
+    lines.append("2. مادرکلان کمی عصبی گلایه می‌کند و نواسه با آرامش جواب می‌دهد.")
+    lines.append("3. موضوع با ویدیوهای بالا تکراری نباشد.")
+    lines.append("4. عنوان و تامبنیل باید دقیقاً با محتوای واقعی ویدیو هم‌خوان باشند. عنوان یا تامبنیل گمراه‌کننده بازدید را پایین می‌آورد.")
+    lines.append("5. بهترین ساعت انتشار را از روی جدول بالا (ساعت انتشار در برابر بازدید) انتخاب کن، به وقت افغانستان و با قالب HH:MM (۲۴ ساعته).")
+    lines.append("6. هشتگ‌ها: ۶ تا ۸ هشتگ ترکیبی فارسی و انگلیسی، مرتبط با همان سناریو و پرجستجو برای مخاطب افغان. برای شورت #shorts هم باشد.")
+    lines.append("7. شورت: ۴۰ تا ۶۰ ثانیه، هوک قوی در ۳ ثانیه‌ی اول، چرخش طنز در پایان.")
+    lines.append("8. ویدیوی طولانی: چند دقیقه‌ای، با ۵ مرحله به ترتیب: هوک، کاشتن نشانه، رسوایی اصلی، واکنش فیزیکی، فرود و دعوت به اقدام.")
+    lines.append("")
+    lines.append("پاسخ را دقیقاً با همین ساختار JSON بده و هیچ متن اضافه‌ای ننویس:")
+    lines.append(SCHEMA)
     return "\n".join(lines)
 
 
@@ -74,16 +165,28 @@ def call_gemini(prompt):
     headers = {"x-goog-api-key": GEMINI_API_KEY, "Content-Type": "application/json"}
     payload = {
         "contents": [{"parts": [{"text": prompt}]}],
-        "generationConfig": {"responseMimeType": "application/json"},
+        "generationConfig": {
+            "responseMimeType": "application/json",
+            "maxOutputTokens": 8192,
+        },
     }
-    r = requests.post(GEMINI_URL, headers=headers, json=payload)
-    print("Gemini status:", r.status_code)
-    print("Gemini response:", r.text[:800])
-    r.raise_for_status()
-    data = r.json()
-    text = data["candidates"][0]["content"]["parts"][0]["text"]
-    text = text.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
-    return json.loads(text)
+    last_error = None
+    for attempt in range(2):
+        r = requests.post(GEMINI_URL, headers=headers, json=payload, timeout=120)
+        print("Gemini status:", r.status_code)
+        if r.status_code != 200:
+            print("Gemini response:", r.text[:800])
+            r.raise_for_status()
+        try:
+            data = r.json()
+            parts = data["candidates"][0]["content"]["parts"]
+            text = "".join(p.get("text", "") for p in parts if not p.get("thought"))
+            text = text.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+            return json.loads(text)
+        except (KeyError, IndexError, json.JSONDecodeError) as e:
+            last_error = e
+            print("Could not parse Gemini answer, attempt", attempt + 1, e)
+    raise SystemExit("Gemini did not return valid JSON: " + str(last_error))
 
 
 def main():
@@ -98,12 +201,13 @@ def main():
     stats = get_video_stats([v["video_id"] for v in videos])
     for v in videos:
         v["views"] = stats.get(v["video_id"], {}).get("viewCount", "0")
+        v["hour_kabul"] = hour_kabul(v["published_at"])
 
-    prompt = build_prompt(videos)
-    suggestion = call_gemini(prompt)
+    suggestion = call_gemini(build_prompt(videos))
+    suggestion["upload_time_text"] = format_upload_time(suggestion.get("upload_time_kabul", ""))
 
     result = {
-        "generated_at": datetime.utcnow().isoformat(),
+        "generated_at": datetime.now(timezone.utc).isoformat(),
         "based_on_videos": [v["title"] for v in videos],
         "suggestion": suggestion,
     }
@@ -112,7 +216,8 @@ def main():
     with open("docs/suggestion.json", "w", encoding="utf-8") as f:
         json.dump(result, f, ensure_ascii=False, indent=2)
 
-    print("Suggestion saved:", suggestion.get("title"))
+    short_title = (suggestion.get("short") or {}).get("title", "")
+    print("Suggestion saved:", short_title)
 
 
 if __name__ == "__main__":
