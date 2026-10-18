@@ -8,6 +8,7 @@ GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 CHANNEL_HANDLE = "tanzcartoon"
 
 YOUTUBE_BASE = "https://www.googleapis.com/youtube/v3"
+GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
 
 
 def get_channel_id(handle):
@@ -53,34 +54,29 @@ def get_video_stats(video_ids):
 
 
 def build_prompt(videos):
-    lines = ["اینها آخرین ویدیوهای کانال طنز خانوادگی «طنزکارتون» با کاراکترهای ثابت مادرکلان و نواسه هستند:\n"]
+    lines = ["اینها آخرین ویدیوهای کانال طنز خانوادگی «طنزکارتون» با کاراکترهای ثابت مادرکلان و نواسه هستند:", ""]
     for v in videos:
         views = v.get("views", "?")
         lines.append(f"- عنوان: {v['title']} | بازدید: {views} | توضیح: {v['description']}")
 
-    lines.append("""
-با توجه به این ویدیوها، یک سناریوی طنز جدید (کوتاه، برای فرمت شورت ۴۰-۶۰ ثانیه‌ای) با همان کاراکترهای مادرکلان و نواسه پیشنهاد بده که:
-1. با موضوعات قبلی تکراری نباشد
-2. یک هوک قوی در ۳ ثانیه‌ی اول داشته باشد
-3. یک چرخش طنز (twist) در پایان داشته باشد
-
-پاسخ را دقیقا به این فرمت JSON بده و هیچ متن اضافه‌ای ننویس:
-{
-  "title": "عنوان پیشنهادی",
-  "hook": "جمله‌ی هوک ابتدایی",
-  "scenario": "شرح کامل سناریو در ۳-۴ جمله",
-  "twist": "توضیح چرخش پایانی"
-}
-""")
+    lines.append("")
+    lines.append("با توجه به این ویدیوها، یک سناریوی طنز جدید (کوتاه، برای فرمت شورت ۴۰ تا ۶۰ ثانیه‌ای) با همان کاراکترهای مادرکلان و نواسه پیشنهاد بده که:")
+    lines.append("1. با موضوعات قبلی تکراری نباشد")
+    lines.append("2. یک هوک قوی در ۳ ثانیه‌ی اول داشته باشد")
+    lines.append("3. یک چرخش طنز (twist) در پایان داشته باشد")
+    lines.append("")
+    lines.append("پاسخ را دقیقا به این فرمت JSON بده و هیچ متن اضافه‌ای ننویس:")
+    lines.append('{"title": "عنوان پیشنهادی", "hook": "جمله‌ی هوک ابتدایی", "scenario": "شرح کامل سناریو در ۳ تا ۴ جمله", "twist": "توضیح چرخش پایانی"}')
     return "\n".join(lines)
 
 
 def call_gemini(prompt):
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
+    headers = {"x-goog-api-key": GEMINI_API_KEY, "Content-Type": "application/json"}
     payload = {
-        "contents": [{"parts": [{"text": prompt}]}]
+        "contents": [{"parts": [{"text": prompt}]}],
+        "generationConfig": {"responseMimeType": "application/json"},
     }
-        r = requests.post(url, json=payload)
+    r = requests.post(GEMINI_URL, headers=headers, json=payload)
     print("Gemini status:", r.status_code)
     print("Gemini response:", r.text[:800])
     r.raise_for_status()
