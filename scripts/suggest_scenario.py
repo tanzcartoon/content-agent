@@ -8,7 +8,7 @@ GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 CHANNEL_HANDLE = "tanzcartoon"
 
 YOUTUBE_BASE = "https://www.googleapis.com/youtube/v3"
-GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
+GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent"
 
 
 def get_channel_id(handle):
