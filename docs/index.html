@@ -61,6 +61,15 @@
   }
   .suggestion { border-color: #facc15; }
   .suggestion h3 { margin-top: 0; font-size: 15px; color: #facc15; }
+  .sug-time { font-size: 13px; color: #e5e7eb; margin-bottom: 4px; }
+  .sug-reason { font-size: 12px; color: #9ca3af; margin-bottom: 14px; }
+  .sug-block { border-top: 1px solid #2a2e3a; padding-top: 12px; margin-top: 12px; }
+  .sug-label { font-size: 12px; color: #facc15; margin-bottom: 6px; }
+  .sug-title { font-weight: 600; margin-bottom: 8px; }
+  .sug-line { font-size: 13px; color: #e5e7eb; margin-bottom: 6px; line-height: 1.7; }
+  .sug-twist { font-size: 13px; color: #86efac; margin-bottom: 6px; }
+  .sug-tags { font-size: 12px; color: #60a5fa; margin-top: 6px; }
+  .beats { font-size: 13px; color: #9ca3af; line-height: 1.8; padding-right: 20px; margin: 6px 0; }
   table { width: 100%; border-collapse: collapse; font-size: 13px; }
   th { text-align: right; color: #9ca3af; font-weight: 500; padding: 8px; border-bottom: 1px solid #2a2e3a; }
   td { padding: 8px; border-bottom: 1px solid #232635; }
@@ -84,14 +93,60 @@ function esc(s) {
     .replace(/>/g, '&gt;');
 }
 
-async function loadDashboard() {
-  const container = document.getElementById('content');
-  try {
-    const res = await fetch('data.json?v=' + Date.now());
-    const data = await res.json();
-    const main = (data.channels && data.channels.main) || {};
+function tagsHtml(tags) {
+  if (!tags || !tags.length) return '';
+  var out = tags.map(function (t) {
+    t = String(t).trim().replace(/\s+/g, '_');
+    return esc(t.charAt(0) === '#' ? t : '#' + t);
+  });
+  return '<div class="sug-tags">' + out.join(' ') + '</div>';
+}
 
-    let html = '';
+function block(label, item, isLong) {
+  var h = '<div class="sug-block">';
+  h += '<div class="sug-label">' + label + '</div>';
+  h += '<div class="sug-title">' + esc(item.title) + '</div>';
+  h += '<div class="sug-line"><b>هوک:</b> ' + esc(item.hook) + '</div>';
+  h += '<div class="sug-line">' + esc(item.scenario) + '</div>';
+  if (isLong && item.beats && item.beats.length) {
+    h += '<ul class="beats">';
+    item.beats.forEach(function (b) { h += '<li>' + esc(b) + '</li>'; });
+    h += '</ul>';
+  } else if (item.twist) {
+    h += '<div class="sug-twist"><b>چرخش:</b> ' + esc(item.twist) + '</div>';
+  }
+  if (item.thumbnail_text || item.thumbnail_image) {
+    h += '<div class="sug-line"><b>🖼 تامبنیل:</b> «' + esc(item.thumbnail_text) + '» — ' + esc(item.thumbnail_image) + '</div>';
+  }
+  h += tagsHtml(item.hashtags);
+  h += '</div>';
+  return h;
+}
+
+function suggestionHtml(sug) {
+  var shortItem = sug.short || (sug.title ? sug : null);
+  var longItem = sug.long || null;
+  if (!shortItem && !longItem) return '';
+  var h = '<div class="competitors suggestion">';
+  h += '<h3>🎬 پیشنهاد امروز</h3>';
+  if (sug.upload_time_text) {
+    h += '<div class="sug-time">⏰ زمان پیشنهادی انتشار: ' + esc(sug.upload_time_text) + '</div>';
+    if (sug.upload_reason) h += '<div class="sug-reason">' + esc(sug.upload_reason) + '</div>';
+  }
+  if (shortItem) h += block('📱 شورت', shortItem, false);
+  if (longItem) h += block('🎞 ویدیوی طولانی', longItem, true);
+  h += '</div>';
+  return h;
+}
+
+async function loadDashboard() {
+  var container = document.getElementById('content');
+  try {
+    var res = await fetch('data.json?v=' + Date.now());
+    var data = await res.json();
+    var main = (data.channels && data.channels.main) || {};
+
+    var html = '';
 
     html += '<div class="stats-row">';
     html += '<div class="stat-card"><div class="stat-label">مشترکین</div><div class="stat-value">' + Number(main.subscribers || 0).toLocaleString() + '</div></div>';
@@ -108,17 +163,10 @@ async function loadDashboard() {
     html += '</div>';
 
     try {
-      const sugRes = await fetch('suggestion.json?v=' + Date.now());
+      var sugRes = await fetch('suggestion.json?v=' + Date.now());
       if (sugRes.ok) {
-        const sugData = await sugRes.json();
-        const sug = sugData.suggestion || {};
-        html += '<div class="competitors suggestion">';
-        html += '<h3>🎬 پیشنهاد سناریوی امروز</h3>';
-        html += '<div style="font-weight:600; margin-bottom:8px;">' + esc(sug.title) + '</div>';
-        html += '<div style="font-size:13px; color:#9ca3af; margin-bottom:6px;"><b>هوک:</b> ' + esc(sug.hook) + '</div>';
-        html += '<div style="font-size:13px; color:#e5e7eb; margin-bottom:6px;">' + esc(sug.scenario) + '</div>';
-        html += '<div style="font-size:13px; color:#86efac;"><b>چرخش:</b> ' + esc(sug.twist) + '</div>';
-        html += '</div>';
+        var sugData = await sugRes.json();
+        html += suggestionHtml(sugData.suggestion || {});
       }
     } catch (e) {
       console.log('suggestion load failed', e);
@@ -126,9 +174,9 @@ async function loadDashboard() {
 
     html += '<div class="competitors"><h3 style="margin-top:0; font-size:15px;">مقایسه با رقبا</h3><table>';
     html += '<tr><th>کانال</th><th>مشترکین</th><th>بازدید</th><th>ویدیو</th></tr>';
-    for (const key in data.channels) {
-      const ch = data.channels[key];
-      const isMain = key === 'main';
+    for (var key in data.channels) {
+      var ch = data.channels[key];
+      var isMain = key === 'main';
       html += '<tr class="' + (isMain ? 'highlight-row' : '') + '">';
       html += '<td>' + esc(ch.title || key) + '</td>';
       html += '<td>' + Number(ch.subscribers || 0).toLocaleString() + '</td>';
