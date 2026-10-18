@@ -80,7 +80,9 @@ def call_gemini(prompt):
     payload = {
         "contents": [{"parts": [{"text": prompt}]}]
     }
-    r = requests.post(url, json=payload)
+        r = requests.post(url, json=payload)
+    print("Gemini status:", r.status_code)
+    print("Gemini response:", r.text[:800])
     r.raise_for_status()
     data = r.json()
     text = data["candidates"][0]["content"]["parts"][0]["text"]
