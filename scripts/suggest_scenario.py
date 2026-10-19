@@ -16,11 +16,13 @@ GEMINI_URL = (
 )
 YOUTUBE_BASE = "https://www.googleapis.com/youtube/v3"
 
+MAX_HISTORY = 60
+
 # شخصیت‌های ثابت کانال. فقط از همین‌ها استفاده می‌شود.
 # اگر نام یا ویژگی‌ای باید عوض شود، همین‌جا ویرایش کن.
 CHARACTERS = [
     "مادرکلان (حدود ۶۰ ساله، کمی عصبی و گلایه‌مند، با اعصاب خراب سؤال می‌کند)",
-    "نواسه (۲۵ ساله، آرام و ملایم، با آرامش جواب می‌دهد)",
+    "نواسه (سیرت ۲۵ ساله، آرام و ملایم، با آرامش جواب می‌دهد)",
     "خانم نواسه (نسترن، ۲۲ ساله)",
     "پدر نواسه (۴۲ ساله)",
     "مادر نواسه (۴۰ ساله)",
@@ -134,7 +136,50 @@ def format_upload_time(hhmm):
         return ""
 
 
-def build_prompt(videos):
+def load_previous():
+    try:
+        with open("docs/suggestion.json", "r", encoding="utf-8") as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}
+
+
+def entry_from(sug, when):
+    short_item = sug.get("short")
+    if not short_item and sug.get("title"):
+        short_item = sug
+    short_item = short_item or {}
+    long_item = sug.get("long") or {}
+    return {
+        "date": when,
+        "short_title": short_item.get("title", ""),
+        "short_summary": str(short_item.get("scenario", ""))[:150],
+        "long_title": long_item.get("title", ""),
+        "long_summary": str(long_item.get("scenario", ""))[:150],
+    }
+
+
+def norm(text):
+    return "".join(str(text).split()).lower()
+
+
+def find_duplicates(sug, history, videos):
+    used = set()
+    for h in history:
+        used.add(norm(h.get("short_title", "")))
+        used.add(norm(h.get("long_title", "")))
+    for v in videos:
+        used.add(norm(v.get("title", "")))
+    used.discard("")
+    dups = []
+    for key in ("short", "long"):
+        title = (sug.get(key) or {}).get("title", "")
+        if title and norm(title) in used:
+            dups.append(title)
+    return dups
+
+
+def build_prompt(videos, history, extra_note=""):
     lines = []
     lines.append("تو دستیار تولید محتوای کانال یوتیوب طنز خانوادگی «طنزکارتون» هستی. مخاطب اصلی کانال مردم افغانستان‌اند.")
     lines.append("")
@@ -146,15 +191,25 @@ def build_prompt(videos):
     for v in videos:
         lines.append("- {} | {} | {}".format(v["title"], v.get("views", "?"), v.get("hour_kabul", "?")))
     lines.append("")
+    if history:
+        lines.append("موضوع‌های قبلاً پیشنهادشده (هرگز تکرار نکن، نه همان موضوع و نه روایت مشابه با اسم یا مکان دیگر):")
+        for h in history[-40:]:
+            if h.get("short_title"):
+                lines.append("- شورت: {} | {}".format(h.get("short_title"), h.get("short_summary", "")))
+            if h.get("long_title"):
+                lines.append("- طولانی: {} | {}".format(h.get("long_title"), h.get("long_summary", "")))
+        lines.append("")
     lines.append("قواعد:")
     lines.append("1. همه‌ی متن‌ها به فارسی دری و لهجه‌ی افغانی باشد. از کلمات افغانی استفاده کن (پیسه به جای پول، وخت به جای وقت، گپ، حویلی، موتر، کلکین) و از کلمات ایرانی استفاده نکن.")
     lines.append("2. مادرکلان کمی عصبی گلایه می‌کند و نواسه با آرامش جواب می‌دهد.")
-    lines.append("3. موضوع با ویدیوهای بالا تکراری نباشد.")
+    lines.append("3. موضوع باید کاملاً تازه باشد و با ویدیوهای بالا و فهرست موضوع‌های قبلی تکراری یا شبیه نباشد.")
     lines.append("4. عنوان و تامبنیل باید دقیقاً با محتوای واقعی ویدیو هم‌خوان باشند. عنوان یا تامبنیل گمراه‌کننده بازدید را پایین می‌آورد.")
     lines.append("5. بهترین ساعت انتشار را از روی جدول بالا (ساعت انتشار در برابر بازدید) انتخاب کن، به وقت افغانستان و با قالب HH:MM (۲۴ ساعته).")
     lines.append("6. هشتگ‌ها: ۶ تا ۸ هشتگ ترکیبی فارسی و انگلیسی، مرتبط با همان سناریو و پرجستجو برای مخاطب افغان. برای شورت #shorts هم باشد.")
     lines.append("7. شورت: ۴۰ تا ۶۰ ثانیه، هوک قوی در ۳ ثانیه‌ی اول، چرخش طنز در پایان.")
     lines.append("8. ویدیوی طولانی: چند دقیقه‌ای، با ۵ مرحله به ترتیب: هوک، کاشتن نشانه، رسوایی اصلی، واکنش فیزیکی، فرود و دعوت به اقدام.")
+    if extra_note:
+        lines.append("9. " + extra_note)
     lines.append("")
     lines.append("پاسخ را دقیقاً با همین ساختار JSON بده و هیچ متن اضافه‌ای ننویس:")
     lines.append(SCHEMA)
@@ -203,13 +258,34 @@ def main():
         v["views"] = stats.get(v["video_id"], {}).get("viewCount", "0")
         v["hour_kabul"] = hour_kabul(v["published_at"])
 
-    suggestion = call_gemini(build_prompt(videos))
+    previous = load_previous()
+    history = previous.get("history")
+    if history is None:
+        history = []
+        if previous.get("suggestion"):
+            history.append(entry_from(previous["suggestion"], previous.get("generated_at", "")))
+
+    suggestion = call_gemini(build_prompt(videos, history))
+
+    dups = find_duplicates(suggestion, history, videos)
+    if dups:
+        print("Duplicate title, asking again:", dups)
+        note = "این عنوان‌ها تکراری بودند، موضوع کاملاً متفاوتی انتخاب کن: " + " | ".join(dups)
+        suggestion = call_gemini(build_prompt(videos, history, note))
+        if find_duplicates(suggestion, history, videos):
+            print("Warning: duplicate title again")
+
     suggestion["upload_time_text"] = format_upload_time(suggestion.get("upload_time_kabul", ""))
 
+    now_iso = datetime.now(timezone.utc).isoformat()
+    history.append(entry_from(suggestion, now_iso))
+    history = history[-MAX_HISTORY:]
+
     result = {
-        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "generated_at": now_iso,
         "based_on_videos": [v["title"] for v in videos],
         "suggestion": suggestion,
+        "history": history,
     }
 
     os.makedirs("docs", exist_ok=True)
