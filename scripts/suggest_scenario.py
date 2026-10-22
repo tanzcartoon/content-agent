@@ -18,11 +18,16 @@ YOUTUBE_BASE = "https://www.googleapis.com/youtube/v3"
 
 MAX_HISTORY = 60
 
+# سناریو فقط وقتی تازه ساخته می‌شود که پیشنهاد فعلی حداقل این‌قدر ساعت قدمت داشته باشد.
+MIN_HOURS_BETWEEN = 20
+# برای ساختن اجباری سناریوی تازه، یک‌بار True کن، اجرا کن، و دوباره False کن.
+FORCE_REGENERATE = False
+
 # شخصیت‌های ثابت کانال. فقط از همین‌ها استفاده می‌شود.
 # اگر نام یا ویژگی‌ای باید عوض شود، همین‌جا ویرایش کن.
 CHARACTERS = [
     "مادرکلان (حدود ۶۰ ساله، کمی عصبی و گلایه‌مند، با اعصاب خراب سؤال می‌کند)",
-    "نواسه (سیرت ۲۵ ساله، آرام و ملایم، با آرامش جواب می‌دهد)",
+    "نواسه (۲۵ ساله، آرام و ملایم، با آرامش جواب می‌دهد)",
     "خانم نواسه (نسترن، ۲۲ ساله)",
     "پدر نواسه (۴۲ ساله)",
     "مادر نواسه (۴۰ ساله)",
@@ -118,6 +123,14 @@ def hour_kabul(iso_string):
         return dt.astimezone(KABUL).strftime("%H:%M")
     except Exception:
         return "?"
+
+
+def hours_since(iso_string):
+    try:
+        dt = datetime.fromisoformat(str(iso_string).replace("Z", "+00:00"))
+        return (datetime.now(timezone.utc) - dt).total_seconds() / 3600
+    except Exception:
+        return None
 
 
 def format_upload_time(hhmm):
@@ -248,6 +261,16 @@ def main():
     if not YOUTUBE_API_KEY or not GEMINI_API_KEY:
         raise SystemExit("Missing YOUTUBE_API_KEY or GEMINI_API_KEY")
 
+    previous = load_previous()
+
+    # اگر پیشنهاد فعلی هنوز تازه است، همان را نگه دار.
+    age = hours_since(previous.get("generated_at"))
+    old_sug = previous.get("suggestion") or {}
+    has_both = bool(old_sug.get("short")) and bool(old_sug.get("long"))
+    if (not FORCE_REGENERATE) and has_both and age is not None and age < MIN_HOURS_BETWEEN:
+        print("Current suggestion is only {:.1f} hours old, keeping it.".format(age))
+        return
+
     channel_id, uploads_id = get_channel_id(CHANNEL_HANDLE)
     if not uploads_id:
         raise SystemExit("Could not resolve channel uploads playlist")
@@ -258,7 +281,6 @@ def main():
         v["views"] = stats.get(v["video_id"], {}).get("viewCount", "0")
         v["hour_kabul"] = hour_kabul(v["published_at"])
 
-    previous = load_previous()
     history = previous.get("history")
     if history is None:
         history = []
