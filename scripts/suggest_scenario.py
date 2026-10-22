@@ -230,6 +230,8 @@ def build_prompt(videos, history, extra_note=""):
 
 
 def call_gemini(prompt):
+    import time
+
     headers = {"x-goog-api-key": GEMINI_API_KEY, "Content-Type": "application/json"}
     payload = {
         "contents": [{"parts": [{"text": prompt}]}],
@@ -238,10 +240,18 @@ def call_gemini(prompt):
             "maxOutputTokens": 8192,
         },
     }
+    waits = [15, 30, 60, 90]
     last_error = None
-    for attempt in range(2):
+    for attempt in range(len(waits) + 1):
         r = requests.post(GEMINI_URL, headers=headers, json=payload, timeout=120)
         print("Gemini status:", r.status_code)
+        if r.status_code in (429, 500, 502, 503, 504):
+            print("Gemini is busy:", r.text[:300])
+            if attempt < len(waits):
+                print("Waiting", waits[attempt], "seconds before retry")
+                time.sleep(waits[attempt])
+                continue
+            r.raise_for_status()
         if r.status_code != 200:
             print("Gemini response:", r.text[:800])
             r.raise_for_status()
@@ -254,6 +264,7 @@ def call_gemini(prompt):
         except (KeyError, IndexError, json.JSONDecodeError) as e:
             last_error = e
             print("Could not parse Gemini answer, attempt", attempt + 1, e)
+            time.sleep(5)
     raise SystemExit("Gemini did not return valid JSON: " + str(last_error))
 
 
