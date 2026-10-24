@@ -1,5 +1,6 @@
 import os
 import json
+import time
 import requests
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
@@ -16,11 +17,12 @@ GEMINI_URL = (
 )
 YOUTUBE_BASE = "https://www.googleapis.com/youtube/v3"
 
-MAX_HISTORY = 60
+MAX_HISTORY = 80
 
-# سناریو فقط وقتی تازه ساخته می‌شود که پیشنهاد فعلی حداقل این‌قدر ساعت قدمت داشته باشد.
-MIN_HOURS_BETWEEN = 20
-# برای ساختن اجباری سناریوی تازه، یک‌بار True کن، اجرا کن، و دوباره False کن.
+# شورت هر ۲۴ ساعت تازه می‌شود و ویدیوی طولانی هفته‌ای یک‌بار.
+SHORT_MIN_HOURS = 20
+LONG_MIN_HOURS = 140
+# برای ساختن اجباری هر دو بخش، یک‌بار True کن، اجرا کن، و دوباره False کن.
 FORCE_REGENERATE = False
 
 # شخصیت‌های ثابت کانال. فقط از همین‌ها استفاده می‌شود.
@@ -33,8 +35,7 @@ CHARACTERS = [
     "مادر نواسه (۴۰ ساله)",
 ]
 
-SCHEMA = """{
-  "upload_time_kabul": "18:30",
+SHORT_SCHEMA = """  "upload_time_kabul": "18:30",
   "upload_reason": "دلیل انتخاب این ساعت در یک جمله",
   "short": {
     "title": "عنوان شورت",
@@ -44,8 +45,9 @@ SCHEMA = """{
     "thumbnail_text": "متن کوتاه روی تامبنیل (حداکثر ۴ کلمه)",
     "thumbnail_image": "توصیف تصویر تامبنیل در یک جمله",
     "hashtags": ["#هشتگ۱", "#shorts"]
-  },
-  "long": {
+  }"""
+
+LONG_SCHEMA = """  "long": {
     "title": "عنوان ویدیوی طولانی",
     "hook": "جمله‌ی هوک",
     "scenario": "خلاصه‌ی داستان در ۳ تا ۴ جمله، با ذکر نام شخصیت‌ها",
@@ -59,8 +61,7 @@ SCHEMA = """{
     "thumbnail_text": "متن کوتاه روی تامبنیل (حداکثر ۴ کلمه)",
     "thumbnail_image": "توصیف تصویر تامبنیل در یک جمله",
     "hashtags": ["#هشتگ۱", "#هشتگ۲"]
-  }
-}"""
+  }"""
 
 
 def get_zone(name, offset_hours):
@@ -157,12 +158,9 @@ def load_previous():
         return {}
 
 
-def entry_from(sug, when):
-    short_item = sug.get("short")
-    if not short_item and sug.get("title"):
-        short_item = sug
+def entry_parts(short_item, long_item, when):
     short_item = short_item or {}
-    long_item = sug.get("long") or {}
+    long_item = long_item or {}
     return {
         "date": when,
         "short_title": short_item.get("title", ""),
@@ -176,7 +174,7 @@ def norm(text):
     return "".join(str(text).split()).lower()
 
 
-def find_duplicates(sug, history, videos):
+def find_duplicates(generated, history, videos):
     used = set()
     for h in history:
         used.add(norm(h.get("short_title", "")))
@@ -186,15 +184,16 @@ def find_duplicates(sug, history, videos):
     used.discard("")
     dups = []
     for key in ("short", "long"):
-        title = (sug.get(key) or {}).get("title", "")
+        title = (generated.get(key) or {}).get("title", "")
         if title and norm(title) in used:
             dups.append(title)
     return dups
 
 
-def build_prompt(videos, history, extra_note=""):
+def build_prompt(videos, history, need_short, need_long, extra_note=""):
     lines = []
     lines.append("تو دستیار تولید محتوای کانال یوتیوب طنز خانوادگی «طنزکارتون» هستی. مخاطب اصلی کانال مردم افغانستان‌اند.")
+    lines.append("کانال هر روز یک شورت و فقط هفته‌ای یک ویدیوی طولانی منتشر می‌کند.")
     lines.append("")
     lines.append("شخصیت‌های ثابت کانال (فقط از همین‌ها استفاده کن، هیچ شخصیت جدیدی اضافه نکن و نام یا نقش‌شان را عوض نکن):")
     for c in CHARACTERS:
@@ -212,26 +211,39 @@ def build_prompt(videos, history, extra_note=""):
             if h.get("long_title"):
                 lines.append("- طولانی: {} | {}".format(h.get("long_title"), h.get("long_summary", "")))
         lines.append("")
+    needed = []
+    if need_short:
+        needed.append("شورت (همراه با ساعت پیشنهادی انتشار)")
+    if need_long:
+        needed.append("ویدیوی طولانی")
+    lines.append("این بار فقط این بخش‌ها را بساز: " + " و ".join(needed) + ".")
+    lines.append("")
     lines.append("قواعد:")
     lines.append("1. همه‌ی متن‌ها به فارسی دری و لهجه‌ی افغانی باشد. از کلمات افغانی استفاده کن (پیسه به جای پول، وخت به جای وقت، گپ، حویلی، موتر، کلکین) و از کلمات ایرانی استفاده نکن.")
     lines.append("2. مادرکلان کمی عصبی گلایه می‌کند و نواسه با آرامش جواب می‌دهد.")
     lines.append("3. موضوع باید کاملاً تازه باشد و با ویدیوهای بالا و فهرست موضوع‌های قبلی تکراری یا شبیه نباشد.")
     lines.append("4. عنوان و تامبنیل باید دقیقاً با محتوای واقعی ویدیو هم‌خوان باشند. عنوان یا تامبنیل گمراه‌کننده بازدید را پایین می‌آورد.")
-    lines.append("5. بهترین ساعت انتشار را از روی جدول بالا (ساعت انتشار در برابر بازدید) انتخاب کن، به وقت افغانستان و با قالب HH:MM (۲۴ ساعته).")
-    lines.append("6. هشتگ‌ها: ۶ تا ۸ هشتگ ترکیبی فارسی و انگلیسی، مرتبط با همان سناریو و پرجستجو برای مخاطب افغان. برای شورت #shorts هم باشد.")
-    lines.append("7. شورت: ۴۰ تا ۶۰ ثانیه، هوک قوی در ۳ ثانیه‌ی اول، چرخش طنز در پایان.")
-    lines.append("8. ویدیوی طولانی: چند دقیقه‌ای، با ۵ مرحله به ترتیب: هوک، کاشتن نشانه، رسوایی اصلی، واکنش فیزیکی، فرود و دعوت به اقدام.")
+    lines.append("5. هشتگ‌ها: ۶ تا ۸ هشتگ ترکیبی فارسی و انگلیسی، مرتبط با همان سناریو و پرجستجو برای مخاطب افغان.")
+    if need_short:
+        lines.append("6. شورت: ۴۰ تا ۶۰ ثانیه، هوک قوی در ۳ ثانیه‌ی اول، چرخش طنز در پایان، و هشتگ #shorts هم باشد.")
+        lines.append("7. بهترین ساعت انتشار شورت را از روی جدول بالا (ساعت انتشار در برابر بازدید) انتخاب کن، به وقت افغانستان و با قالب HH:MM (۲۴ ساعته).")
+    if need_long:
+        lines.append("8. ویدیوی طولانی: چند دقیقه‌ای، با ۵ مرحله به ترتیب: هوک، کاشتن نشانه، رسوایی اصلی، واکنش فیزیکی، فرود و دعوت به اقدام.")
     if extra_note:
         lines.append("9. " + extra_note)
     lines.append("")
+    parts = []
+    if need_short:
+        parts.append(SHORT_SCHEMA)
+    if need_long:
+        parts.append(LONG_SCHEMA)
+    schema = "{\n" + ",\n".join(parts) + "\n}"
     lines.append("پاسخ را دقیقاً با همین ساختار JSON بده و هیچ متن اضافه‌ای ننویس:")
-    lines.append(SCHEMA)
+    lines.append(schema)
     return "\n".join(lines)
 
 
 def call_gemini(prompt):
-    import time
-
     headers = {"x-goog-api-key": GEMINI_API_KEY, "Content-Type": "application/json"}
     payload = {
         "contents": [{"parts": [{"text": prompt}]}],
@@ -273,14 +285,32 @@ def main():
         raise SystemExit("Missing YOUTUBE_API_KEY or GEMINI_API_KEY")
 
     previous = load_previous()
-
-    # اگر پیشنهاد فعلی هنوز تازه است، همان را نگه دار.
-    age = hours_since(previous.get("generated_at"))
     old_sug = previous.get("suggestion") or {}
-    has_both = bool(old_sug.get("short")) and bool(old_sug.get("long"))
-    if (not FORCE_REGENERATE) and has_both and age is not None and age < MIN_HOURS_BETWEEN:
-        print("Current suggestion is only {:.1f} hours old, keeping it.".format(age))
+    base_stamp = previous.get("generated_at")
+    short_stamp = previous.get("short_generated_at") or base_stamp
+    long_stamp = previous.get("long_generated_at") or base_stamp
+
+    short_age = hours_since(short_stamp)
+    long_age = hours_since(long_stamp)
+
+    need_short = (
+        FORCE_REGENERATE
+        or not old_sug.get("short")
+        or short_age is None
+        or short_age >= SHORT_MIN_HOURS
+    )
+    need_long = (
+        FORCE_REGENERATE
+        or not old_sug.get("long")
+        or long_age is None
+        or long_age >= LONG_MIN_HOURS
+    )
+
+    if not need_short and not need_long:
+        print("Short is {:.1f} h old and long is {:.1f} h old, keeping both.".format(short_age, long_age))
         return
+
+    print("Need new short:", need_short, "| Need new long:", need_long)
 
     channel_id, uploads_id = get_channel_id(CHANNEL_HANDLE)
     if not uploads_id:
@@ -295,27 +325,49 @@ def main():
     history = previous.get("history")
     if history is None:
         history = []
-        if previous.get("suggestion"):
-            history.append(entry_from(previous["suggestion"], previous.get("generated_at", "")))
+        if old_sug:
+            old_short = old_sug.get("short") or (old_sug if old_sug.get("title") else None)
+            history.append(entry_parts(old_short, old_sug.get("long"), base_stamp or ""))
 
-    suggestion = call_gemini(build_prompt(videos, history))
+    generated = call_gemini(build_prompt(videos, history, need_short, need_long))
 
-    dups = find_duplicates(suggestion, history, videos)
+    dups = find_duplicates(generated, history, videos)
     if dups:
         print("Duplicate title, asking again:", dups)
         note = "این عنوان‌ها تکراری بودند، موضوع کاملاً متفاوتی انتخاب کن: " + " | ".join(dups)
-        suggestion = call_gemini(build_prompt(videos, history, note))
-        if find_duplicates(suggestion, history, videos):
+        generated = call_gemini(build_prompt(videos, history, need_short, need_long, note))
+        if find_duplicates(generated, history, videos):
             print("Warning: duplicate title again")
+
+    now_iso = datetime.now(timezone.utc).isoformat()
+    suggestion = dict(old_sug)
+    new_short = None
+    new_long = None
+
+    if need_short and generated.get("short"):
+        new_short = generated["short"]
+        suggestion["short"] = new_short
+        suggestion["upload_time_kabul"] = generated.get("upload_time_kabul", "")
+        suggestion["upload_reason"] = generated.get("upload_reason", "")
+        short_stamp = now_iso
+
+    if need_long and generated.get("long"):
+        new_long = generated["long"]
+        suggestion["long"] = new_long
+        long_stamp = now_iso
+
+    if not new_short and not new_long:
+        raise SystemExit("Gemini answer had no usable sections")
 
     suggestion["upload_time_text"] = format_upload_time(suggestion.get("upload_time_kabul", ""))
 
-    now_iso = datetime.now(timezone.utc).isoformat()
-    history.append(entry_from(suggestion, now_iso))
+    history.append(entry_parts(new_short, new_long, now_iso))
     history = history[-MAX_HISTORY:]
 
     result = {
         "generated_at": now_iso,
+        "short_generated_at": short_stamp,
+        "long_generated_at": long_stamp,
         "based_on_videos": [v["title"] for v in videos],
         "suggestion": suggestion,
         "history": history,
@@ -325,8 +377,7 @@ def main():
     with open("docs/suggestion.json", "w", encoding="utf-8") as f:
         json.dump(result, f, ensure_ascii=False, indent=2)
 
-    short_title = (suggestion.get("short") or {}).get("title", "")
-    print("Suggestion saved:", short_title)
+    print("Suggestion saved. New short:", (new_short or {}).get("title", "-"), "| New long:", (new_long or {}).get("title", "-"))
 
 
 if __name__ == "__main__":
