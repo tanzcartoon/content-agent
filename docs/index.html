@@ -61,6 +61,16 @@
   }
   .suggestion { border-color: #facc15; }
   .suggestion h3 { margin-top: 0; font-size: 15px; color: #facc15; }
+  .sug-warn {
+    background: #3b1d1d;
+    border: 1px solid #7f1d1d;
+    color: #fecaca;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 13px;
+    margin-bottom: 12px;
+    line-height: 1.7;
+  }
   .sug-time { font-size: 13px; color: #e5e7eb; margin-bottom: 4px; }
   .sug-reason { font-size: 12px; color: #9ca3af; margin-bottom: 14px; }
   .sug-block { border-top: 1px solid #2a2e3a; padding-top: 12px; margin-top: 12px; }
@@ -93,6 +103,19 @@ function esc(s) {
     .replace(/>/g, '&gt;');
 }
 
+function ageHours(iso) {
+  var t = Date.parse(iso);
+  if (isNaN(t)) return null;
+  return (Date.now() - t) / 3600000;
+}
+
+function ageText(h) {
+  if (h === null) return '';
+  if (h < 1) return 'کمتر از یک ساعت پیش';
+  if (h < 48) return Math.round(h) + ' ساعت پیش';
+  return Math.round(h / 24) + ' روز پیش';
+}
+
 function tagsHtml(tags) {
   if (!tags || !tags.length) return '';
   var out = tags.map(function (t) {
@@ -104,7 +127,7 @@ function tagsHtml(tags) {
 
 function block(label, item, isLong) {
   var h = '<div class="sug-block">';
-  h += '<div class="sug-label">' + label + '</div>';
+  h += '<div class="sug-label">' + esc(label) + '</div>';
   h += '<div class="sug-title">' + esc(item.title) + '</div>';
   h += '<div class="sug-line"><b>هوک:</b> ' + esc(item.hook) + '</div>';
   h += '<div class="sug-line">' + esc(item.scenario) + '</div>';
@@ -123,18 +146,29 @@ function block(label, item, isLong) {
   return h;
 }
 
-function suggestionHtml(sug) {
-  var shortItem = sug.short || (sug.title ? sug : null);
+function suggestionHtml(data) {
+  var sug = data.suggestion || {};
+  var shortItem = sug.short || null;
   var longItem = sug.long || null;
-  if (!shortItem && !longItem) return '';
+  if (!shortItem && !longItem && !data.last_error) return '';
+  var base = data.generated_at;
+  var shortAge = ageHours(data.short_generated_at || base);
+  var longAge = ageHours(data.long_generated_at || base);
+
   var h = '<div class="competitors suggestion">';
   h += '<h3>🎬 پیشنهاد امروز</h3>';
-  if (sug.upload_time_text) {
-    h += '<div class="sug-time">⏰ زمان پیشنهادی انتشار: ' + esc(sug.upload_time_text) + '</div>';
+  if (data.last_error) {
+    h += '<div class="sug-warn">⚠️ ساخت سناریوی تازه ناموفق بود: ' + esc(data.last_error) + '</div>';
+  }
+  if (shortAge !== null && shortAge > 30) {
+    h += '<div class="sug-warn">⚠️ سناریوی شورت ' + ageText(shortAge) + ' ساخته شده و امروز تازه نشده است.</div>';
+  }
+  if (sug.upload_time_text && shortItem) {
+    h += '<div class="sug-time">⏰ زمان پیشنهادی انتشار شورت: ' + esc(sug.upload_time_text) + '</div>';
     if (sug.upload_reason) h += '<div class="sug-reason">' + esc(sug.upload_reason) + '</div>';
   }
-  if (shortItem) h += block('📱 شورت', shortItem, false);
-  if (longItem) h += block('🎞 ویدیوی طولانی', longItem, true);
+  if (shortItem) h += block('📱 شورت امروز · ساخته شده ' + ageText(shortAge), shortItem, false);
+  if (longItem) h += block('🎞 ویدیوی طولانی این هفته (نشر: شب جمعه) · ساخته شده ' + ageText(longAge), longItem, true);
   h += '</div>';
   return h;
 }
@@ -166,7 +200,7 @@ async function loadDashboard() {
       var sugRes = await fetch('suggestion.json?v=' + Date.now());
       if (sugRes.ok) {
         var sugData = await sugRes.json();
-        html += suggestionHtml(sugData.suggestion || {});
+        html += suggestionHtml(sugData);
       }
     } catch (e) {
       console.log('suggestion load failed', e);
