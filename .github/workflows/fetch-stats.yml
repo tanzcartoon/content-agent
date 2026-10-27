@@ -1,40 +1,75 @@
 name: Fetch YouTube Stats
+
 on:
   workflow_dispatch:
+    inputs:
+      force:
+        description: "Force new scenarios (short and long)"
+        type: boolean
+        default: false
   schedule:
     - cron: '0 6 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fetch-stats
+  cancel-in-progress: false
+
 jobs:
   fetch:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          pip install requests
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
       - name: Run fetch script
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
         run: python scripts/fetch_stats.py
+
       - name: Generate scenario suggestion
         continue-on-error: true
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          FORCE_REGENERATE: ${{ inputs.force }}
         run: python scripts/suggest_scenario.py
+
       - name: Send Telegram report
+        continue-on-error: true
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python scripts/send_telegram.py
+
       - name: Commit updated data
         run: |
           git config user.name "content-agent-bot"
           git config user.email "actions@github.com"
-          git add docs/data.json
-          if [ -f docs/suggestion.json ]; then git add docs/suggestion.json; fi
-          git diff --staged --quiet || git commit -m "Update stats data"
-          git push
+          git add docs
+          if git diff --staged --quiet; then
+            echo "Nothing to commit"
+            exit 0
+          fi
+          git commit -m "Update stats and suggestion"
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin HEAD:main; then
+              exit 0
+            fi
+            echo "Push failed, retrying in 10 seconds"
+            sleep 10
+          done
+          exit 1
