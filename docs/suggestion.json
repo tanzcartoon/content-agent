@@ -97,6 +97,6 @@
       "long_summary": "پدر نواسه بل برق کمرشکن ره به خانه می‌آورد و مادرکلان با اعصاب خراب تمام فامیل ره در صالون به صف می‌کند تا مجرم اصلی ره پیدا کند. او نسترن ره به استفا"
     }
   ],
-  "last_attempt_at": "2026-11-02T11:50:11.988709+00:00",
-  "last_error": "شورت: All Gemini models failed: Gemini gemini-3.8-flash did not answer (ReadTimeout) | Gemini gemini-omni-flash-preview is busy (HTTP 429) | Gemini gemini-omni-1.1-flash is busy (HTTP 429) | Gemini gemini-flash-latest did not answer (ReadTimeout) | ویدیوی طولانی: All Gemini models failed: Gemini gem"
+  "last_attempt_at": "2026-11-02T13:59:47.566969+00:00",
+  "last_error": "شورت: All Gemini models failed: Gemini gemini-3.8-flash is busy (HTTP 503) | Gemini gemini-omni-flash-preview is busy (HTTP 429) | Gemini gemini-omni-1.1-flash is busy (HTTP 429) | Gemini gemini-flash-latest is busy (HTTP 429)"
 }
