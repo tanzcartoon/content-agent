@@ -28,7 +28,7 @@ LONG_SUGGEST_WEEKDAY = 1
 FORCE_REGENERATE = os.environ.get("FORCE_REGENERATE", "").strip().lower() == "true"
 
 REQUEST_TIMEOUT = (30, 150)
-BUSY_WAITS = [10, 20, 40]
+BUSY_WAITS = [60]
 SKIP_WORDS = ("image", "tts", "live", "audio", "embedding", "robotics", "computer", "native", "lite")
 
 # شخصیت‌های ثابت کانال. فقط از همین‌ها استفاده می‌شود.
@@ -424,7 +424,7 @@ def call_gemini(prompt):
             errors.append(str(e))
             if not discovered:
                 discovered = True
-                others = [m for m in discover_models() if m != GEMINI_MODEL][:3]
+                others = [m for m in discover_models() if m != GEMINI_MODEL][:0]
                 print("Fallback models:", others)
                 models.extend(others)
     raise RuntimeError("All Gemini models failed: " + " | ".join(errors))
