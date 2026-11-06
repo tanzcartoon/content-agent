@@ -47,10 +47,10 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           FORCE_REGENERATE: ${{ inputs.force }}
         run: |
-          for i in 1 2 3 4; do
+          for i in 1 2; do
             python scripts/suggest_scenario.py && break
             echo "Attempt $i failed"
-            if [ "$i" -lt 4 ]; then sleep 900; fi
+            if [ "$i" -lt 2 ]; then sleep 600; fi
           done
 
       - name: Send Telegram report
