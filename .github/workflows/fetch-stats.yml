@@ -71,7 +71,8 @@ jobs:
           fi
           git commit -m "Update stats and suggestion"
           for attempt in 1 2 3 4; do
-            if git pull --rebase origin main && git push origin HEAD:main; then
+          git rebase --abort 2>/dev/null || true
+            if git pull --rebase -X theirs origin main && git push origin HEAD:main; then
               exit 0
             fi
             echo "Push failed, retrying in 10 seconds"
